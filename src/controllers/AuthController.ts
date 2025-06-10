@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import type { Request, Response } from 'express';
 import User from '../models/User';
 import { checkPassword, hashPassword } from '../utils/auth';
 import { genearteToken } from '../utils/token';
@@ -109,5 +109,8 @@ export class AuthController {
     await user.save()
     res.json({message: "Reset password successfully"})
 
+  }
+  static getAuthUser = async (req: Request, res: Response) => {
+    res.json(req.user)
   }
 }

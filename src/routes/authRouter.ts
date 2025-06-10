@@ -4,6 +4,7 @@ import { body, param } from "express-validator";
 import { handleInputErrors } from "../middleware/validation";
 import { limiter } from "../config/limiter/rate-limit";
 import { NotEmpty } from "sequelize-typescript";
+import { authenticate } from "../middleware/auth";
 
 
 const router = Router()
@@ -57,5 +58,9 @@ router.post("/new-password/:token",
     .isLength({min: 8, max: 16}).withMessage("The password is too short, it must have at least eight characters"),
   handleInputErrors,
   AuthController.resetPasswordWithToken)
+
+router.get("/user",
+  authenticate, 
+  AuthController.getAuthUser)
 
 export default router

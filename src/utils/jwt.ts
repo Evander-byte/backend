@@ -9,3 +9,8 @@ export const generateJWT = (id: string): string => {
 
   return token
 }
+
+export const decodedJWT = (token: string) => {
+  const decoded = jwt.verify(token, process.env.JWT_SECRET)
+  return decoded
+}

@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+import type { Request, Response, NextFunction } from 'express';
 import { body, param } from 'express-validator';
 import Expense from '../models/Expense';
 
