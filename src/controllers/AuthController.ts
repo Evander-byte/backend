@@ -69,4 +69,45 @@ export class AuthController {
     const token = generateJWT(user.id)
     res.status(200).json({"access_token": token})
   }
+  static recoverPassword = async(req: Request, res: Response) => {
+    const { email } = req.body
+    const user = await User.findOne({where: {email}})
+    if(!user) {
+      const error = new Error("Invalid user")
+      res.status(404).json({message: error.message})
+    }
+    user.token = genearteToken()
+    await user.save()
+
+    await AuthEmail.sendRecoverPasswordMail({
+      name: user.name,
+      email: user.email,
+      token: user.token
+    })
+    res.json({message: "Check your email and fallow the instructions"})
+  }
+  static valdiateToken = async (req: Request, res: Response) => {
+    const { token } = req.body
+    const tokenExists = await User.findOne({where: {token}})
+    if(!tokenExists) {
+      const error = new Error("Invalid token")
+      res.status(404).json({message: error.message})
+    }
+    res.json({message: "Valid token"})
+  }
+  static resetPasswordWithToken = async (req: Request, res: Response) => {
+    const { token } = req.params
+    const { password } = req.body
+    const user = await User.findOne({where: {token}})
+    if(!user) {
+      const error = new Error("Invalid token")
+      res.status(404).json({message: error.message})
+    }
+    //Hash new password
+    user.password = await hashPassword(password)
+    user.token = null
+    await user.save()
+    res.json({message: "Reset password successfully"})
+
+  }
 }

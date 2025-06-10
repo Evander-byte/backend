@@ -1,8 +1,9 @@
 import { Router } from "express";
 import { AuthController } from "../controllers/AuthController";
-import { body } from "express-validator";
+import { body, param } from "express-validator";
 import { handleInputErrors } from "../middleware/validation";
 import { limiter } from "../config/limiter/rate-limit";
+import { NotEmpty } from "sequelize-typescript";
 
 
 const router = Router()
@@ -15,14 +16,14 @@ router.post("/create-account",
     .notEmpty().isEmail().withMessage("Invalid email"),
   body("password")
     .isLength({min: 8, max: 16}).withMessage("The password is too short, it must have at least eight characters"),
-    handleInputErrors,
+  handleInputErrors,
   AuthController.create)
 
 router.post("/confirm-account",
    body("token")
     .isLength({min: 6, max: 6})
     .notEmpty().withMessage("Invalid Token"),
-    handleInputErrors,
+  handleInputErrors,
   AuthController.confirmAccount)
 
 router.post("/login",
@@ -31,7 +32,30 @@ router.post("/login",
     .notEmpty().withMessage("Email cannot be empty"),
   body("password")
     .notEmpty().withMessage("Password cannot be empty"),
-    handleInputErrors,
+  handleInputErrors,
   AuthController.login)
+
+router.post("/recover-password", 
+  body("email")
+    .isEmail().withMessage("Invalid email")
+    .notEmpty().withMessage("Email cannot be empty"),
+  handleInputErrors,
+  AuthController.recoverPassword)
+
+router.post("/validate-token", 
+  body("token")
+    .isLength({min: 6, max: 6})
+    .notEmpty().withMessage("Invalid token"),
+  handleInputErrors,
+  AuthController.valdiateToken)
+
+router.post("/new-password/:token", 
+  param("token")
+    .isLength({min: 6, max: 6})
+    .notEmpty().withMessage("Invalid token"),
+  body("password")
+    .isLength({min: 8, max: 16}).withMessage("The password is too short, it must have at least eight characters"),
+  handleInputErrors,
+  AuthController.resetPasswordWithToken)
 
 export default router
