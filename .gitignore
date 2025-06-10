@@ -1,0 +1,10 @@
+# System
+.DS_Store
+
+# Config
+.env
+
+# Dependencies
+node_modules/
+npm-debug.log
+yarn-error.log
