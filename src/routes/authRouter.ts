@@ -63,4 +63,23 @@ router.get("/user",
   authenticate, 
   AuthController.getAuthUser)
 
+router.post("/update-password", 
+  authenticate,
+  body("current_password")
+    .notEmpty().withMessage("The current password cannot be empty"),
+  body("password")
+    .isLength({min: 8, max: 16}).withMessage("The new password is too short, it must have at least eight characters")
+    .notEmpty().withMessage("The new password is cannot be empty"),
+  handleInputErrors,
+  AuthController.updateCurrentPassword
+)
+
+router.post("/check-password", 
+  authenticate,
+  body("password")
+    .notEmpty().withMessage("The password is required for this action"),
+  handleInputErrors,
+  AuthController.checkPassword
+)
+
 export default router
