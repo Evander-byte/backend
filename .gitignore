@@ -8,3 +8,8 @@
 node_modules/
 npm-debug.log
 yarn-error.log
+
+# Testing files
+coverage/
+.nyc_output/
+test-results/
