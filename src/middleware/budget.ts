@@ -34,14 +34,23 @@ export const validateBudgetExists = async (req: Request, res: Response, next: Ne
 }
 
 export const validateBudgetInput = async (req: Request, res: Response, next: NextFunction) => {
-    await body('name')
+    await body("name")
       .notEmpty().withMessage("Budget's name cannot be empty")
       .run(req)
       
-    await body('amount')
+    await body("amount")
       .notEmpty().withMessage("Budget's amount cannot be empty")
       .isNumeric().withMessage("Invalid amount")
       .custom(value => value > 0).withMessage("Budget's amount must be higher than zero ")
       .run(req)
       next()
+}
+
+export const hasAccess = (req: Request, res: Response, next: NextFunction) => {
+  if(req.budget.userId !== req.user.id) {
+    const error = new Error("Invalid action")
+    res.status(401).json({error: error.message})
+    return
+  }
+  next()
 }

@@ -9,7 +9,9 @@ export class BudgetController {
         order: [
           ["createdAt", "DESC"]
         ],
-        //TODO: FIlter by user
+        where: {
+          userId: req.user.id
+        }
       })
       res.status(200).json(budgets)
     } catch (error) {
@@ -20,13 +22,13 @@ export class BudgetController {
   static create = async (req: Request, res: Response) => {
     try {
       const budget = new Budget(req.body)
+      budget.userId = req.user.id
       await budget.save()
       res.status(201).json({message: "Budget created successfully"})
     } catch (error) {
       res.status(500).json({error: "There was an error"})
     }
   }
-
   static getById = async (req: Request, res: Response) => {
     const budget = await Budget.findByPk(req.budget.id, {
       include: [Expense]

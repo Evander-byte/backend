@@ -30,3 +30,6 @@ class Budget extends Model {
 
 export default Budget
 
+
+
+
