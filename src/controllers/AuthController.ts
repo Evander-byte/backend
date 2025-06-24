@@ -12,7 +12,7 @@ export class AuthController {
     //Prevent duplicated
     const userExist = await User.findOne({where: {email}})
     if(userExist){
-      const error = new Error("The email already registred")
+      const error = new Error("The email already registered")
       res.status(409).json({error: error.message})
       return
     }
@@ -28,7 +28,8 @@ export class AuthController {
       })
       res.status(200).json({message: "Account created successfully"})
     } catch (error) {
-      res.status(500).json({error: "There was and error"})
+      console.log(error)
+      res.status(500).json({error: "There was an error"})
     }
   }
   static confirmAccount = async (req: Request, res: Response) => {
