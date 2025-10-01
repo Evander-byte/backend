@@ -12,7 +12,7 @@ export class AuthController {
     //Prevent duplicated
     const userExist = await User.findOne({where: {email}})
     if(userExist){
-      const error = new Error("The email already registered")
+      const error = new Error("The email is already registered")
       res.status(409).json({error: error.message})
       return
     }
@@ -26,7 +26,7 @@ export class AuthController {
         email: user.email,
         token: user.token
       })
-      res.status(200).json({message: "Account created successfully"})
+      res.status(200).json("Account created successfully")
     } catch (error) {
       console.log(error)
       res.status(500).json({error: "There was an error"})
@@ -43,7 +43,7 @@ export class AuthController {
     user.confirmed = true
     user.token = null
     await user.save()
-    res.status(201).json({message: "Account confirmed successfully"})
+    res.status(201).json("Account confirmed successfully")
   }
   static login = async (req: Request, res: Response) => {
     const { email, password } = req.body
@@ -76,6 +76,7 @@ export class AuthController {
     if(!user) {
       const error = new Error("Invalid user")
       res.status(404).json({message: error.message})
+      return
     }
     user.token = genearteToken()
     await user.save()
@@ -85,7 +86,7 @@ export class AuthController {
       email: user.email,
       token: user.token
     })
-    res.json({message: "Check your email and fallow the instructions"})
+    res.json("Check your email and fallow the instructions")
   }
   static valdiateToken = async (req: Request, res: Response) => {
     const { token } = req.body
@@ -94,7 +95,7 @@ export class AuthController {
       const error = new Error("Invalid token")
       res.status(404).json({message: error.message})
     }
-    res.json({message: "Valid token"})
+    res.json("Valid token, create a new password")
   }
   static resetPasswordWithToken = async (req: Request, res: Response) => {
     const { token } = req.params
@@ -103,12 +104,13 @@ export class AuthController {
     if(!user) {
       const error = new Error("Invalid token")
       res.status(404).json({message: error.message})
+      return
     }
     //Hash new password
     user.password = await hashPassword(password)
     user.token = null
     await user.save()
-    res.json({message: "Reset password successfully"})
+    res.json("Reset password successfully")
 
   }
   static getAuthUser = async (req: Request, res: Response) => {

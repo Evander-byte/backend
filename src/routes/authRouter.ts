@@ -36,7 +36,7 @@ router.post("/login",
   handleInputErrors,
   AuthController.login)
 
-router.post("/recover-password", 
+router.post("/forgot-password", 
   body("email")
     .isEmail().withMessage("Invalid email")
     .notEmpty().withMessage("Email cannot be empty"),
