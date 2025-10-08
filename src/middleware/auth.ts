@@ -16,7 +16,6 @@ export const authenticate = async (
   next: NextFunction
 ) => {
   const bearer = req.headers.authorization;
-  console.log("Bearer", bearer);
   if (!bearer) {
     const error = new Error("Invalid session");
     res.status(401).json({ error: error.message });
