@@ -2,7 +2,6 @@ import type { Request, Response } from "express";
 import Expense from "../models/Expense";
 
 export class ExpenseController {
-  static getAll = async (req: Request, res: Response) => {};
   static create = async (req: Request, res: Response) => {
     try {
       const expense = await Expense.create(req.body);
@@ -10,7 +9,7 @@ export class ExpenseController {
       await expense.save();
       res.status(201).json("Expense added successfully");
     } catch (error) {
-      res.status(500).json({ message: "There was an error" });
+      res.status(500).json("There was an error");
     }
   };
   static getById = async (req: Request, res: Response) => {
