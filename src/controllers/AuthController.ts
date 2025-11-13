@@ -132,7 +132,7 @@ export class AuthController {
     const new_password = await hashPassword(password);
     user.password = new_password;
     await user.save();
-    res.json({ message: "Changed password successfully" });
+    res.json("Changed password successfully");
   };
   static checkPassword = async (req: Request, res: Response) => {
     const { password } = req.body;
