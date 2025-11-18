@@ -146,4 +146,42 @@ export class AuthController {
     }
     res.json("Correct Password");
   };
+  static changeUsernameOrEmail = async (req: Request, res: Response) => {
+    const { name, email } = req.body;
+    const { id } = req.user;
+    if (!email && !name) {
+      res.status(400).json({
+        message: "At least one filed (name or meial) must be provided",
+      });
+      return;
+    }
+
+    try {
+      const user = await User.findByPk(id);
+      if (!user) {
+        res.status(404).json({ message: "user not found" });
+      }
+
+      //Update the fileds if provided
+      if (email) {
+        user.email = email;
+      }
+
+      if (user) {
+        user.name = name;
+      }
+
+      await user.save();
+
+      let message = "Update successful: ";
+      const updates = [];
+      if (email) updates.push("email");
+      if (name) updates.push("user name");
+      message += updates.join(" and ") + " changed successfully";
+      res.json({ message });
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ message: "There was and error" });
+    }
+  };
 }
