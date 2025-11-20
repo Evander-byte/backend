@@ -109,11 +109,5 @@ router.post(
   AuthController.checkPassword
 );
 
-router.put(
-  "/user",
-  authenticate,
-  body("email").isEmail().withMessage("Invalid Email"),
-  handleInputErrors,
-  AuthController.changeUsernameOrEmail
-);
+router.put("/user", authenticate, AuthController.changeUsernameOrEmail);
 export default router;
